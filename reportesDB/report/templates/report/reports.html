@@ -1,0 +1,92 @@
+<!-- Extension -->
+{% extends 'core/base.html' %}
+
+<!-- Load Static -->
+{% load static %}
+
+<!-- Title -->
+{% block title %}Reports{% endblock %}
+
+<!-- Custom Tag -->
+
+<!-- Content -->
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Reports</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group me-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+        <a href="{% url 'results' %}"><button type="button" class="btn btn-sm btn-outline-secondary">Export</button></a>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        <span data-feather="calendar"></span>
+        This week
+      </button>
+    </div>
+  </div>
+
+  {% load tag_extras %}
+  
+  <h4>Select the report you want to generate.</h4>
+  <div class="container">
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Inventore praesentium cupiditate maxime odit reprehenderit explicabo adipisci corporis sunt voluptas, officiis natus accusamus eius ipsa minus necessitatibus, molestias placeat. Repudiandae, sed!</p>
+
+    <!-- <div class="btn-group" role="group" aria-label="Basic example"> -->
+      <!-- <button type="button" class="btn btn-primary">
+        <a href="{% url 'clients' %}">Clientes</a>
+      </button>
+      <button type="button" class="btn btn-primary">Facturas</button>
+      <button type="button" class="btn btn-primary">Otro</button> -->
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'clients' %}">Clientes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Facturas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Otro</a>
+        </li>
+      </ul>
+    <!-- </div> -->
+    <br>
+    {% if SqlServerConn %}
+      {% for enterprise in SqlServerConn %}
+        <h5 style="margin-bottom:15px;">{{enterprise.0.1}}</h5>
+        <table class="table table-striped">
+          <tr>
+            <th>ID Cliente</th>
+            <th>Corporación</th>
+            <th>Razón Social</th>
+            <th>RFC</th>
+            <th>ID Agente Venta</th>
+            <th>Fecha Alta</th>
+            <th>Estatus</th>
+            <th>Base de Datos</th>
+          </tr>
+          {% for data in enterprise %}
+              <tr>
+                <!-- ID Cliente -->
+                <td>{{data.2}}</td>
+                <!-- Corporación -->
+                <td>{{data.1}}</td>
+                <!-- Razón Social -->
+                <td>{{data.3}}</td>
+                <!-- RFC -->
+                <td>{{data.4}}</td>
+                <!-- ID Agente Venta -->
+                <td>{{data.7}}</td>
+                <!-- Fecha Alta -->
+                <td>{% formatDate data.5 %}</td>
+                <!-- Estatus -->
+                <td>{{data.6}}</td>
+                <!-- Base de datos -->
+                <td>{{data.0}}</td>
+              </tr>
+          {% endfor %}
+        </table>
+        <br>
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}
