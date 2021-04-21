@@ -46,14 +46,29 @@ def get_clients(request):
                         "CNETO, CIMPUESTO1, CTOTAL, "+
                         "CMETODOPAG, CGUIDDOCUMENTO, CUSUARIO, CIDDOCUMENTO "+
                         "FROM admDocumentos " +
-                        "WHERE CFECHA BETWEEN '20200427' AND '20200624'")
+                        "WHERE CFECHA BETWEEN '20200623' AND '20200624'")
             
+            dataDocumentos = cursor.fetchall()
             temp = []
-            for query in cursor.fetchall():            
+            observTemp = []
+            sentence = ''
+            for query in dataDocumentos:            
                 query = list(query)
                 query.insert(0, database.replace('adCOM_', '').replace('_', ' '))
                 query.insert(0, database)
+                observations = cursor.execute(f"SELECT COBSERVAMOV FROM admMovimientos WHERE CIDDOCUMENTO='{query[len(query)-1]}'")
+                for observ in observations:
+                    if str(observ[0]) != 'None':
+                        observTemp.append(str(observ[0]))
+                for word in observTemp:
+                    sentence+=word+' \n'
+                    sentence+=' \n'
+                query.append(sentence)
+                cursor.fetchall()
                 temp.append(query)
+
+            observTemp = [] # reset observations temp.
+            sentence = '' # reset sentence.
             result.append(temp)
         
         query_cache = result
@@ -63,7 +78,7 @@ def get_clients(request):
     
     if len(result) == len(enterprises):
         print("\nALL RIGHT\n")
-        # print(result[0])
+        print(result[0][0])
         print("\n\n")
     else:
         print("SOMETHING WENT WRONG")
