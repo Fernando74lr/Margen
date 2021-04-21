@@ -10,6 +10,10 @@ import pyodbc
 
 query_cache = []
 
+
+def table(request):
+    return render(request, 'report/table_filter.html')
+
 def reports(request):
     return render(request, 'report/reports.html')
 
@@ -27,10 +31,23 @@ def get_clients(request):
                                 'UID=' + username + ';'+
                                 'PWD=' + password + ';')
             cursor = conn.cursor()
+           
+            # cursor.execute("SELECT "+
+            #             "CIDCLIENTEPROVEEDOR, CRAZONSOCIAL, CRFC,"+
+            #             "CFECHAALTA, CESTATUS, CIDAGENTEVENTA "+
+            #             "FROM admClientes")
+
+            # cursor.execute("SELECT CIDCLIENTEPROVEEDOR FROM admDocumentos")
+
             cursor.execute("SELECT "+
-                        "CIDCLIENTEPROVEEDOR, CRAZONSOCIAL, CRFC,"+
-                        "CFECHAALTA, CESTATUS, CIDAGENTEVENTA "+
-                        "FROM admClientes")
+                        "CSERIEDOCUMENTO, CFOLIO, CFECHA, "+
+                        "CIDCLIENTEPROVEEDOR, CRAZONSOCIAL, CRFC, "+
+                        "CIDAGENTE, COBSERVACIONES, CCANCELADO, "+
+                        "CNETO, CIMPUESTO1, CTOTAL, "+
+                        "CMETODOPAG, CGUIDDOCUMENTO, CUSUARIO, CIDDOCUMENTO "+
+                        "FROM admDocumentos " +
+                        "WHERE CFECHA BETWEEN '20200427' AND '20200624'")
+            
             temp = []
             for query in cursor.fetchall():            
                 query = list(query)
@@ -46,6 +63,8 @@ def get_clients(request):
     
     if len(result) == len(enterprises):
         print("\nALL RIGHT\n")
+        # print(result[0])
+        print("\n\n")
     else:
         print("SOMETHING WENT WRONG")
 

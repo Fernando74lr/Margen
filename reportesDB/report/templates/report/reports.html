@@ -11,77 +11,96 @@
 
 <!-- Content -->
 {% block content %}
+
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">Reports</h1>
+  <h1 class="h2">Reportes</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
       <div class="btn-group me-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-        <a href="{% url 'results' %}"><button type="button" class="btn btn-sm btn-outline-secondary">Export</button></a>
+        <a href="{% url 'results' %}"><button type="button" class="btn btn-sm btn-outline-success">Export</button></a>
       </div>
-      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-        <span data-feather="calendar"></span>
-        This week
-      </button>
     </div>
   </div>
 
   {% load tag_extras %}
-  
-  <h4>Select the report you want to generate.</h4>
+  <h4>Generar reporte a partir de un rango de fechas</h4>
   <div class="container">
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Inventore praesentium cupiditate maxime odit reprehenderit explicabo adipisci corporis sunt voluptas, officiis natus accusamus eius ipsa minus necessitatibus, molestias placeat. Repudiandae, sed!</p>
+    <p>
+      Primero define un rango de fechas en el siguiente campo y después presiona el botón
+      <u>Obtener datos</u> para previsualizar las tablas.
+    </p>
 
-    <!-- <div class="btn-group" role="group" aria-label="Basic example"> -->
-      <!-- <button type="button" class="btn btn-primary">
-        <a href="{% url 'clients' %}">Clientes</a>
-      </button>
-      <button type="button" class="btn btn-primary">Facturas</button>
-      <button type="button" class="btn btn-primary">Otro</button> -->
-      <ul class="nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'clients' %}">Clientes</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Facturas</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Otro</a>
-        </li>
-      </ul>
-    <!-- </div> -->
+    <h6>Rango de fechas</h6>
+    <div id="reportrange" class="dropdown-toggle" style="border-radius:5px; background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 17.5%">
+        </span> <span></span>
+    </div><br>
+    <a href="{% url 'clients' %}"><button type="button" class="btn btn-sm btn-outline-primary mr-2">
+      Obtener datos
+    </button></a><br>
+    
     <br>
     {% if SqlServerConn %}
       {% for enterprise in SqlServerConn %}
-        <h5 style="margin-bottom:15px;">{{enterprise.0.1}}</h5>
-        <table class="table table-striped">
-          <tr>
-            <th>ID Cliente</th>
-            <th>Corporación</th>
-            <th>Razón Social</th>
-            <th>RFC</th>
-            <th>ID Agente Venta</th>
-            <th>Fecha Alta</th>
-            <th>Estatus</th>
-            <th>Base de Datos</th>
-          </tr>
+        <h5 style="margin-bottom:15px;margin-left:-9%">{{enterprise.0.1}}</h5>
+        <table class="table table-striped table-hover table-sm" style="margin-left:-9%">
+          <thead class="table-dark">
+            <th class="centerText">#</th>
+            <th class="centerText">Serie Doc.</th>
+            <th class="centerText">Corporación </th>
+            <th class="centerText">Folio</th>
+            <th class="centerText">Fecha</th>
+            <th class="centerText">RFC</th>
+            <th class="centerText">ID Cliente Proveedor</th>
+            <th class="centerText">Razón Social</th>
+            <th class="centerText">ID Agente</th>
+            <th class="centerText">Observaciones</th>
+            <th class="centerText">Cancelado</th>
+            <th class="centerText">Neto</th>
+            <th class="centerText">Impuesto1</th>
+            <th class="centerText">Total</th>
+            <th class="centerText">Método de pago</th>
+            <th class="centerText">GUID Doc.</th>
+            <th class="centerText">Usuario</th>
+            <th class="centerText">ID Doc.</th>
+          </thead>
           {% for data in enterprise %}
               <tr>
-                <!-- ID Cliente -->
-                <td>{{data.2}}</td>
+                <td scope="row" class="centerText">{{ forloop.counter }}</td>
+                <!-- Serie Documento-->
+                <td class="centerText">{{data.2}}</td>
                 <!-- Corporación -->
-                <td>{{data.1}}</td>
-                <!-- Razón Social -->
-                <td>{{data.3}}</td>
-                <!-- RFC -->
-                <td>{{data.4}}</td>
-                <!-- ID Agente Venta -->
-                <td>{{data.7}}</td>
-                <!-- Fecha Alta -->
-                <td>{% formatDate data.5 %}</td>
-                <!-- Estatus -->
-                <td>{{data.6}}</td>
-                <!-- Base de datos -->
-                <td>{{data.0}}</td>
+                <td class="centerText">{{data.1}}</td>
+                <!-- Folio-->
+                <td class="centerText">{{data.3}}</td>
+                <!-- Fecha-->
+                <td class="centerText">{{data.4}}</td>
+                <!-- RFC-->
+                <td class="centerText">{{data.7}}</td>
+                <!-- ID Cliente Proveedor-->
+                <td class="centerText">{% formatDate data.5 %}</td>
+                <!-- Razón Social-->
+                <td class="centerText">{{data.6}}</td>
+                <!-- Base de datos-->
+                <td class="centerText">{{data.8}}</td>
+                <!-- ID Agente-->
+                <td class="centerText">{{data.9}}</td>
+                <!-- Observaciones-->
+                <td class="centerText">{{data.10}}</td>
+                <!-- Cancelado-->
+                <td class="centerText">{{data.11}}</td>
+                <!-- Neto-->
+                <td class="centerText">{{data.12}}</td>
+                <!-- Impuesto1-->
+                <td class="centerText">{{data.13}}</td>
+                <!-- Total-->
+                <td class="centerText">{{data.14}}</td>
+                <!-- Método de pago-->
+                <td class="centerText">{{data.15}}</td>
+                <!-- GUID Documento-->
+                <td class="centerText">{{data.16}}</td>
+                <!-- Usuario-->
+                <td class="centerText">{{data.17}}</td>
+                <!-- ID Documento-->
+                <td class="centerText">{{data.18}}</td>
               </tr>
           {% endfor %}
         </table>

@@ -1,0 +1,105 @@
+<!-- Extension -->
+{% extends 'core/base.html' %}
+
+<!-- Load Static -->
+{% load static %}
+
+<!-- Title -->
+{% block title %}Reports{% endblock %}
+
+<!-- Custom Tag -->
+
+<!-- Content -->
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Reports</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group me-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+        <a href="{% url 'results' %}"><button type="button" class="btn btn-sm btn-outline-secondary">Export</button></a>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        <span data-feather="calendar"></span>
+        This week
+      </button>
+    </div>
+  </div>
+
+  <h4>Select the report you want to generate.</h4>
+  <div class="container">
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Inventore praesentium cupiditate maxime odit reprehenderit explicabo adipisci corporis sunt voluptas, officiis natus accusamus eius ipsa minus necessitatibus, molestias placeat. Repudiandae, sed!</p>
+
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'clients' %}">Clientes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Facturas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Otro</a>
+        </li>
+      </ul>
+    <!-- </div> -->
+    <br>
+      <div id="tableDiv">
+        <table id="examplexd" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tiger Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td>$320,800</td>
+                </tr>
+                <tr>
+                    <td>Garrett Winters</td>
+                    <td>Accountant</td>
+                    <td>Tokyo</td>
+                    <td>63</td>
+                    <td>2011/07/25</td>
+                    <td>$170,750</td>
+                </tr>
+                <tr>
+                    <td>Ashton Cox</td>
+                    <td>Junior Technical Author</td>
+                    <td>San Francisco</td>
+                    <td>66</td>
+                    <td>2009/01/12</td>
+                    <td>$86,000</td>
+                </tr>
+                <tr>
+                    <td>Cedric Kelly</td>
+                    <td>Senior Javascript Developer</td>
+                    <td>Edinburgh</td>
+                    <td>22</td>
+                    <td>2012/03/29</td>
+                    <td>$433,060</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+        <br>
+  </div>
+{% endblock %}
