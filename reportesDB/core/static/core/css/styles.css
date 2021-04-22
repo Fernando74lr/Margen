@@ -20,3 +20,24 @@ p {
     justify-content: center;
     text-align: center;
 }
+
+#titleAndFilter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: -6.5%;
+  width: 110%;
+  height: 70px;
+  /* border: 1px solid red; */
+}
+
+.inputFilter {
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.inputFilter::placeholder {
+  font-size: 16px;
+}

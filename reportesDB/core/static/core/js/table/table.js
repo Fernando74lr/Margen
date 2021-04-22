@@ -8,15 +8,53 @@
 //     document.getElementById(tagId).DataTable();
 // }
 
-$(document).ready(function() {
+function myFunction(inputID, tableID) {
+    var input, filter, table, tr, td, cell, i, j;
+    input = document.getElementById(inputID);
+    filter = input.value.toUpperCase();
+    table = document.getElementById(tableID);
+    tr = table.getElementsByTagName("tr");
+    for (i = 1; i < tr.length; i++) {
+      // Hide the row initially.
+      tr[i].style.display = "none";
     
+      td = tr[i].getElementsByTagName("td");
+      for (var j = 0; j < td.length; j++) {
+        cell = tr[i].getElementsByTagName("td")[j];
+        if (cell) {
+          if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+            break;
+          } 
+        }
+      }
+    }
+  }
+
+$(document).ready(function() {
+    // Tables
+    // $('#example19').addClass('table table-striped table-bordered');
+    // $('#example19').DataTable();
+
+    // Date Range Picker
     var start = moment().subtract(29, 'days');
     var end = moment();
 
     function cb(start, end) {
-        $('#reportrange span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-        console.log(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-        $("#date").html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+        let rangeDate = start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY');
+        $('#reportrange span').html(rangeDate);
+
+        console.log(rangeDate);
+        let url = rangeDate.split(' - ');
+        let beginDate = formatDate(url[0]);
+        let endDate = formatDate(url[1]);
+
+        $("#getDataButton").attr('href', `/reports/clients/${beginDate}/${endDate}`);
+    }
+
+    function formatDate(date) {
+        let beginDate = date.split('/');
+        return `${beginDate[2]}-${beginDate[0]}-${beginDate[1]}`;
     }
 
     $('#reportrange').daterangepicker({

@@ -9,7 +9,8 @@ from openpyxl import Workbook
 import pyodbc
 
 query_cache = []
-
+beginDateG = ''
+endDateG = ''
 
 def table(request):
     return render(request, 'report/table_filter.html')
@@ -17,7 +18,19 @@ def table(request):
 def reports(request):
     return render(request, 'report/reports.html')
 
-def get_clients(request):
+def get_clients(request, beginDate, endDate):
+    global beginDateG
+    global endDateG
+
+    beginDateG = beginDate.replace('-', '/')
+    endDateG = endDate.replace('-', '/')
+
+    beginDate = list(beginDate.split("/"))
+    endDate = list(endDate.split("/"))
+
+    print(f"\n{beginDateG} - {endDateG}\n")
+    print(f"\n{beginDate} - {endDate}\n")
+
     global query_cache
     result = []
 
@@ -39,8 +52,8 @@ def get_clients(request):
                         "CNETO, CIMPUESTO1, CTOTAL, "+
                         "CMETODOPAG, CGUIDDOCUMENTO, CUSUARIO, CIDDOCUMENTO "+
                         "FROM admDocumentos " +
-                        "WHERE CFECHA BETWEEN '20200623' AND '20200624'")
-            
+                        f"WHERE CFECHA BETWEEN '{''.join(beginDate)}' AND '{''.join(endDate)}'")
+            # 20200623 | 20200624
             dataDocumentos = cursor.fetchall()
             temp = []
             observTemp = []
@@ -81,8 +94,10 @@ def clients_report(request):
     wb = Workbook()
     ws = wb.active
     ws.title = "Reporte"
-    ws['A1'] = f'REPORTE DE CLIENTES - {format_date()} - {get_time()}' # TODO: Poner el rango de fechas
-    ws.merge_cells('A1:F1')
+    ws['A1'] = f'REPORTE DE CLIENTES - {format_date()} - {get_time()}'
+    ws['E1'] = f'Rango: {beginDateG} - {endDateG}'
+    ws.merge_cells('A1:D1')
+    ws.merge_cells('E1:F1')
 
     # HEADERS
     ws['A2'] = 'SERIE DOCUMENTO'
@@ -115,7 +130,10 @@ def clients_report(request):
     ws.row_dimensions[2].height = 42.75
 
     ws['A1'].alignment = Alignment(horizontal="center", vertical="center")
-    ws['A1'].font = Font(size="20", color="FF0000")
+    ws['A1'].font = Font(size="18", color="FF0000")
+
+    ws['E1'].alignment = Alignment(horizontal="center", vertical="center")
+    ws['E1'].font = Font(size="18", color="FF0000")
 
     for col in range(18):
         ws.cell(row=2, column=col+1).alignment = Alignment(horizontal="center", vertical="center")
