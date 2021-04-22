@@ -1,4 +1,5 @@
 from openpyxl.styles import Border, Side
+from datetime import datetime as dateTimeFormat
 import datetime
 
 thin_border = Border(left=Side(style='thin'), 
@@ -55,6 +56,11 @@ enterprises = [
     'adCOM_CONSULTORIA_DE_GESTI',
     'adCOM_CONSULTORIA_ESTRATEG'
 ]
+
+def get_time():
+    now = dateTimeFormat.now()
+    current_time = now.strftime("%H:%M:%S")
+    return current_time
 
 def format_date():
     months = {

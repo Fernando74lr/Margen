@@ -40,75 +40,75 @@
     <br>
     {% if SqlServerConn %}
       {% for enterprise in SqlServerConn %}
-        <h5 style="margin-bottom:15px;margin-left:-6.5%">{{enterprise.0.1}}</h5>
-        <table class="table table-striped table-bordered table-sm" style="margin-left:-6.5%">
-          <thead class="table-dark">
-            <th class="centerText">#</th>
-            <th class="centerText">Serie Doc.</th>
-            <th class="centerText">Corporación </th>
-            <th class="centerText">Folio</th>
-            <th class="centerText">Fecha</th>
-            <th class="centerText">RFC</th>
-            <th class="centerText">ID Cliente Proveedor</th>
-            <th class="centerText">Razón Social</th>
-            <th class="centerText">ID Agente</th>
-            <!-- <th class="centerText">Observaciones</th> -->
-            <th class="centerText">Cancelado</th>
-            <th class="centerText">Neto</th>
-            <th class="centerText">Impuesto1</th>
-            <th class="centerText">Total</th>
-            <th class="centerText">Método de pago</th>
-            <th class="centerText">GUID Doc.</th>
-            <th class="centerText">Usuario</th>
-            <th class="centerText">ID Doc.</th>
-            <th class="centerText">Mov. Obv.</th>
-          </thead>
-          {% for data in enterprise %}
-              <tbody>
-                <td scope="row" class="centerText">{{ forloop.counter }}</td>
-                <!-- Serie Documento-->
-                <td class="centerText">{{data.2}}</td>
-                <!-- Corporación -->
-                <td class="centerText">{{data.1}}</td>
-                <!-- Folio-->
-                <td class="centerText">{{data.3}}</td>
-                <!-- Fecha-->
-                <td class="centerText">{{data.4}}</td>
-                <!-- RFC-->
-                <td class="centerText">{{data.7}}</td>
-                <!-- ID Cliente Proveedor-->
-                <td class="centerText">{% formatDate data.5 %}</td>
-                <!-- Razón Social-->
-                <td class="centerText">{{data.6}}</td>
-                <!-- Base de datos-->
-                <td class="centerText">{{data.8}}</td>
-                <!-- ID Agente-->
-                <td class="centerText">{{data.9}}</td>
-                <!-- Observaciones-->
-                <!-- <td class="centerText">{{data.10}}</td> -->
-                <!-- Cancelado-->
-                <td class="centerText">{{data.11}}</td>
-                <!-- Neto-->
-                <td class="centerText">{{data.12}}</td>
-                <!-- Impuesto1-->
-                <td class="centerText">{{data.13}}</td>
-                <!-- Total-->
-                <td class="centerText">{{data.14}}</td>
-                <!-- Método de pago-->
-                <td class="centerText">{{data.15}}</td>
-                <!-- GUID Documento-->
-                <td class="centerText">{{data.16}}</td>
-                <!-- Usuario-->
-                <td class="centerText">{{data.17}}</td>
-                <!-- ID Documento-->
-                <td class="centerText">{{data.18}}</td>
-                <!-- Mov. Obv. -->
-                <!-- <td class="centerText">{{data.19}}</td> -->
-              </tbody>
-          {% endfor %}
-        </table>
-        <br>
-      {% endfor %}
+        {% if enterprise %}
+          <h5 style="margin-bottom:15px;margin-left:-6.5%">{{enterprise.0.1}}</h5>
+          <table class="table table-striped table-bordered table-sm" style="margin-left:-6.5%">
+            <thead class="table-dark">
+              <th class="centerText">#</th>
+              <th class="centerText">Serie Doc.</th>
+              <th class="centerText">Corporación </th>
+              <th class="centerText">Folio</th>
+              <th class="centerText">Fecha</th>
+              <th class="centerText">RFC</th>
+              <th class="centerText">ID Cliente Proveedor</th>
+              <th class="centerText">Razón Social</th>
+              <th class="centerText">ID Agente</th>
+              <!-- <th class="centerText">Observaciones</th> -->
+              <th class="centerText">Cancelado</th>
+              <th class="centerText">Neto</th>
+              <th class="centerText">Impuesto1</th>
+              <th class="centerText">Total</th>
+              <th class="centerText">Método de pago</th>
+              <th class="centerText">GUID Doc.</th>
+              <th class="centerText">Usuario</th>
+              <th class="centerText">ID Doc.</th>
+              <th class="centerText">Mov. Obv.</th>
+            </thead>
+            {% for data in enterprise %}
+                <tbody>
+                  <td scope="row" class="centerText">{{ forloop.counter }}</td>
+                  <!-- Serie Documento -->
+                  <td class="centerText">{{data.2}}</td>
+                  <!-- Corporación  -->
+                  <td class="centerText">{{data.1}}</td>
+                  <!-- Folio -->
+                  <td class="centerText">{{data.3}}</td>
+                  <!-- Fecha -->
+                  <td class="centerText">{% formatDate data.4 %}</td>
+                  <!-- RFC -->
+                  <td class="centerText">{{data.7}}</td>
+                  <!-- ID Cliente Proveedor -->
+                  <td class="centerText">{{data.5}}</td>
+                  <!-- Razón Social -->
+                  <td class="centerText">{{data.6}}</td>
+                  <!-- ID Agente -->
+                  <td class="centerText">{{data.8}}</td>
+                  <!-- Cancelado -->
+                  <td class="centerText">{{data.9}}</td>
+                  <!-- Observaciones -->
+                  <!-- <td class="centerText">{{data.10}}</td>  -->
+                  <!-- Neto -->
+                  <td class="centerText">{{data.11}}</td>
+                  <!-- Impuesto1 -->
+                  <td class="centerText">{{data.12}}</td>
+                  <!-- Total -->
+                  <td class="centerText">{{data.13}}</td>
+                  <!-- Método de pago -->
+                  <td class="centerText">{{data.14}}</td>
+                  <!-- GUID Documento -->
+                  <td class="centerText">{{data.15}}</td>
+                  <!-- Usuario -->
+                  <td class="centerText">{{data.16}}</td>
+                  <!-- ID Documento -->
+                  <td class="centerText">{{data.17}}</td>
+                  <!-- Mov. Obv. -->
+                  <td class="centerText">{{data.18}}</td>
+                </tbody>
+            {% endfor %}
+          </table>
+          <br>
+        {% endif %}
+    {% endfor %}
     {% endif %}
   </div>
 {% endblock %}

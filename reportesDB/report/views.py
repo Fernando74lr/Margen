@@ -1,7 +1,7 @@
 from .data.secret.credentials import server, username, password
 from django.http.response import HttpResponse
 from openpyxl.utils import get_column_letter
-from .functions.tools import format_date, thin_border, enterprises
+from .functions.tools import format_date, thin_border, enterprises, get_time
 from openpyxl.styles import Alignment, Font, PatternFill
 from django.shortcuts import render
 from .models import SqlServerConn
@@ -32,13 +32,6 @@ def get_clients(request):
                                 'PWD=' + password + ';')
             cursor = conn.cursor()
            
-            # cursor.execute("SELECT "+
-            #             "CIDCLIENTEPROVEEDOR, CRAZONSOCIAL, CRFC,"+
-            #             "CFECHAALTA, CESTATUS, CIDAGENTEVENTA "+
-            #             "FROM admClientes")
-
-            # cursor.execute("SELECT CIDCLIENTEPROVEEDOR FROM admDocumentos")
-
             cursor.execute("SELECT "+
                         "CSERIEDOCUMENTO, CFOLIO, CFECHA, "+
                         "CIDCLIENTEPROVEEDOR, CRAZONSOCIAL, CRFC, "+
@@ -78,8 +71,6 @@ def get_clients(request):
     
     if len(result) == len(enterprises):
         print("\nALL RIGHT\n")
-        print(result[0][0])
-        print("\n\n")
     else:
         print("SOMETHING WENT WRONG")
 
@@ -89,25 +80,36 @@ def clients_report(request):
     # OPEN WORKBOOK AND HEADER DETAILS
     wb = Workbook()
     ws = wb.active
-    ws['A1'] = f'REPORTE DE CLIENTES - {format_date()}'
-    ws.merge_cells('A1:C1')
+    ws.title = "Reporte"
+    ws['A1'] = f'REPORTE DE CLIENTES - {format_date()} - {get_time()}' # TODO: Poner el rango de fechas
+    ws.merge_cells('A1:F1')
 
     # HEADERS
-    ws['A2'] = 'ID CLIENTE'
+    ws['A2'] = 'SERIE DOCUMENTO'
     ws['B2'] = 'CORPORACIÓN'
-    ws['C2'] = 'RAZÓN SOCIAL'
-    ws['D2'] = 'RFC'
-    ws['E2'] = 'ID AGENTE VENTA'
-    ws['F2'] = 'FECHA ALTA'
-    ws['G2'] = 'ESTATUS'
-    ws['H2'] = 'BASE DE DATOS'
+    ws['C2'] = 'FOLIO'
+    ws['D2'] = 'FECHA'
+    ws['E2'] = 'RFC'
+    ws['F2'] = 'ID CLIENTE PROVEEDOR'
+    ws['G2'] = 'RAZÓN SOCIAL'
+    ws['H2'] = 'ID AGENTE'
+    ws['I2'] = 'OBSERVACIONES'
+    ws['J2'] = 'CANCELADO'
+    ws['K2'] = 'NETO'
+    ws['L2'] = 'IMPUESTO1'
+    ws['M2'] = 'TOTAL'
+    ws['N2'] = 'MÉTODO DE PAGO'
+    ws['O2'] = 'GUID DOCUMENTO'
+    ws['P2'] = 'USUARIO'
+    ws['Q2'] = 'ID DOCUMENTO'
+    ws['R2'] = 'OBSERV. MOVIM.'
 
     # FILTERS
     FullRange = "A2:" + get_column_letter(ws.max_column) + str(ws.max_row)
     ws.auto_filter.ref = FullRange
 
     # ALIGNMENTS, COLORS AND DIMENSIONS
-    dimensions = [13.71, 23.86, 65, 16.43, 23, 15.43, 11.29, 34]
+    dimensions = [29.43, 23.57, 12.57, 19.43, 15.14, 34.57, 68.14, 18.29, 26, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, 25.43, 60]
     
     ws.row_dimensions[1].height = 26.25
     ws.row_dimensions[2].height = 42.75
@@ -115,7 +117,7 @@ def clients_report(request):
     ws['A1'].alignment = Alignment(horizontal="center", vertical="center")
     ws['A1'].font = Font(size="20", color="FF0000")
 
-    for col in range(8):
+    for col in range(18):
         ws.cell(row=2, column=col+1).alignment = Alignment(horizontal="center", vertical="center")
         ws.cell(row=2, column=col+1).fill = PatternFill(start_color="2F75B5", end_color="2F75B5", fill_type = "solid")
         ws.cell(row=2, column=col+1).font = Font(size="16", color="FFFFFF")
@@ -133,7 +135,7 @@ def clients_report(request):
         print("\nCREATING EXCEL\n")
         for enterprise in query_cache:
             for data in enterprise:
-                # ID Cliente
+                # Serie Documento
                 ws.cell(row=counter, column=1).value = data[2]
                 ws.cell(row=counter, column=1).font = Font(size="12")
                 ws.cell(row=counter, column=1).border = thin_border
@@ -141,30 +143,70 @@ def clients_report(request):
                 ws.cell(row=counter, column=2).value = data[1]
                 ws.cell(row=counter, column=2).font = Font(size="12")
                 ws.cell(row=counter, column=2).border = thin_border
-                # Razón Social
+                # Folio
                 ws.cell(row=counter, column=3).value = data[3]
                 ws.cell(row=counter, column=3).font = Font(size="12")
                 ws.cell(row=counter, column=3).border = thin_border
-                # RFC
+                # Fecha
                 ws.cell(row=counter, column=4).value = data[4]
                 ws.cell(row=counter, column=4).font = Font(size="12")
                 ws.cell(row=counter, column=4).border = thin_border
-                # ID Agente Venta
+                # RFC
                 ws.cell(row=counter, column=5).value = data[7]
                 ws.cell(row=counter, column=5).font = Font(size="12")
                 ws.cell(row=counter, column=5).border = thin_border
-                # Fecha Alta
+                # ID Cliente Proveedor
                 ws.cell(row=counter, column=6).value = str(data[5]).split(' ')[0]
                 ws.cell(row=counter, column=6).font = Font(size="12")
                 ws.cell(row=counter, column=6).border = thin_border
-                # Estatus
+                # Razón Social
                 ws.cell(row=counter, column=7).value = data[6]
                 ws.cell(row=counter, column=7).font = Font(size="12")
                 ws.cell(row=counter, column=7).border = thin_border
-                # Base de datos
-                ws.cell(row=counter, column=8).value = data[0]
+                # ID Agente
+                ws.cell(row=counter, column=8).value = data[8]
                 ws.cell(row=counter, column=8).font = Font(size="12")
                 ws.cell(row=counter, column=8).border = thin_border
+                # Observaciones
+                ws.cell(row=counter, column=9).value = data[10]
+                ws.cell(row=counter, column=9).font = Font(size="12")
+                ws.cell(row=counter, column=9).border = thin_border
+                # Cancelado
+                ws.cell(row=counter, column=10).value = data[9]
+                ws.cell(row=counter, column=10).font = Font(size="12")
+                ws.cell(row=counter, column=10).border = thin_border
+                # Neto
+                ws.cell(row=counter, column=11).value = data[11]
+                ws.cell(row=counter, column=11).font = Font(size="12")
+                ws.cell(row=counter, column=11).border = thin_border
+                # Impuesto1
+                ws.cell(row=counter, column=12).value = data[12]
+                ws.cell(row=counter, column=12).font = Font(size="12")
+                ws.cell(row=counter, column=12).border = thin_border
+                # Total
+                ws.cell(row=counter, column=13).value = data[13]
+                ws.cell(row=counter, column=13).font = Font(size="12")
+                ws.cell(row=counter, column=13).border = thin_border
+                # Método de pago
+                ws.cell(row=counter, column=14).value = str(data[14]).split(' ')[0]
+                ws.cell(row=counter, column=14).font = Font(size="12")
+                ws.cell(row=counter, column=14).border = thin_border
+                # GUID Documento
+                ws.cell(row=counter, column=15).value = data[15]
+                ws.cell(row=counter, column=15).font = Font(size="12")
+                ws.cell(row=counter, column=15).border = thin_border
+                # Usuario
+                ws.cell(row=counter, column=16).value = data[16]
+                ws.cell(row=counter, column=16).font = Font(size="12")
+                ws.cell(row=counter, column=16).border = thin_border
+                # ID Documento
+                ws.cell(row=counter, column=17).value = str(data[17]).split(' ')[0]
+                ws.cell(row=counter, column=17).font = Font(size="12")
+                ws.cell(row=counter, column=17).border = thin_border
+                # Observ. Movim.
+                ws.cell(row=counter, column=18).value = data[18]
+                ws.cell(row=counter, column=18).font = Font(size="12")
+                ws.cell(row=counter, column=18).border = thin_border
 
                 counter+=1
     else:
