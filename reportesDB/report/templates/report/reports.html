@@ -73,47 +73,49 @@
               </tr>
             </thead>
             {% for data in enterprise %}
-              <tbody>
-                <tr>
-                  <td scope="row" class="centerText">{{ forloop.counter }}</td>
-                  <!-- Serie Documento -->
-                  <td class="centerText">{{data.2}}</td>
-                  <!-- Corporación  -->
-                  <td class="centerText">{{data.1}}</td>
-                  <!-- Folio -->
-                  <td class="centerText">{{data.3}}</td>
-                  <!-- Fecha -->
-                  <td class="centerText">{% formatDate data.4 %}</td>
-                  <!-- RFC -->
-                  <td class="centerText">{{data.7}}</td>
-                  <!-- ID Cliente Proveedor -->
-                  <td class="centerText">{{data.5}}</td>
-                  <!-- Razón Social -->
-                  <td class="centerText">{{data.6}}</td>
-                  <!-- ID Agente -->
-                  <td class="centerText">{{data.8}}</td>
-                  <!-- Cancelado -->
-                  <td class="centerText">{{data.9}}</td>
-                  <!-- Observaciones -->
-                  <!-- <td class="centerText">{{data.10}}</td>  -->
-                  <!-- Neto -->
-                  <td class="centerText">{{data.11}}</td>
-                  <!-- Impuesto1 -->
-                  <td class="centerText">{{data.12}}</td>
-                  <!-- Total -->
-                  <td class="centerText">{{data.13}}</td>
-                  <!-- Método de pago -->
-                  <td class="centerText">{{data.14}}</td>
-                  <!-- GUID Documento -->
-                  <td class="centerText">{{data.15}}</td>
-                  <!-- Usuario -->
-                  <td class="centerText">{{data.16}}</td>
-                  <!-- ID Documento -->
-                  <td class="centerText">{{data.17}}</td>
-                  <!-- Mov. Obv. -->
-                  <td class="centerText">{{data.18}}</td>
-                </tr>
-              </tbody>
+              {% if forloop.counter <= 20 %}
+                <tbody>
+                  <tr>
+                    <td scope="row" class="centerText">{{ forloop.counter }}</td>
+                    <!-- Serie Documento -->
+                    <td class="centerText">{{data.2}}</td>
+                    <!-- Corporación  -->
+                    <td class="centerText">{{data.1}}</td>
+                    <!-- Folio -->
+                    <td class="centerText">{{data.3}}</td>
+                    <!-- Fecha -->
+                    <td class="centerText">{% formatDate data.4 %}</td>
+                    <!-- RFC -->
+                    <td class="centerText">{{data.7}}</td>
+                    <!-- ID Cliente Proveedor -->
+                    <td class="centerText">{{data.5}}</td>
+                    <!-- Razón Social -->
+                    <td class="centerText">{{data.6}}</td>
+                    <!-- ID Agente -->
+                    <td class="centerText">{{data.8}}</td>
+                    <!-- Cancelado -->
+                    <td class="centerText">{{data.9}}</td>
+                    <!-- Observaciones -->
+                    <!-- <td class="centerText">{{data.10}}</td>  -->
+                    <!-- Neto -->
+                    <td class="centerText">{{data.11}}</td>
+                    <!-- Impuesto1 -->
+                    <td class="centerText">{{data.12}}</td>
+                    <!-- Total -->
+                    <td class="centerText">{{data.13}}</td>
+                    <!-- Método de pago -->
+                    <td class="centerText">{{data.14}}</td>
+                    <!-- GUID Documento -->
+                    <td class="centerText">{{data.15}}</td>
+                    <!-- Usuario -->
+                    <td class="centerText">{{data.16}}</td>
+                    <!-- ID Documento -->
+                    <td class="centerText">{{data.17}}</td>
+                    <!-- Mov. Obv. -->
+                    <td class="centerText">{{data.18}}</td>
+                  </tr>
+                </tbody>
+              {% endif %}
             {% endfor %}
           </table>
           <br>

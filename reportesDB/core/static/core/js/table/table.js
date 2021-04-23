@@ -32,10 +32,6 @@ function myFunction(inputID, tableID) {
   }
 
 $(document).ready(function() {
-    // Tables
-    // $('#example19').addClass('table table-striped table-bordered');
-    // $('#example19').DataTable();
-
     // Date Range Picker
     var start = moment().subtract(29, 'days');
     var end = moment();
