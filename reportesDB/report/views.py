@@ -7,6 +7,8 @@ from django.shortcuts import render
 from .models import SqlServerConn
 from openpyxl import Workbook
 import pyodbc
+from sqlalchemy import create_engine
+import pymssql
 
 query_cache = []
 beginDateG = ''
@@ -24,9 +26,53 @@ def reports(request):
     clean_cache()
     return render(request, 'report/reports.html')
 
+def get_enterprises_names():
+    database = 'CompacWAdmin'
+
+    conn = pyodbc.connect('DRIVER={SQL Server};'+
+                        'SERVER=' + server + ';'+
+                        'DATABASE=' + database + ';'+
+                        'UID=' + username + ';'+
+                        'PWD=' + password + ';')
+
+    cursor = conn.cursor()
+    cursor.execute("SELECT CNOMBREEMPRESA, CRUTADATOS FROM Empresas")
+    enterprisesDB = cursor.fetchall()
+
+    enterprises_names = []
+
+    for enterprise in enterprisesDB:
+        enterprises_names.append([
+            enterprise[0],
+            enterprise[1].split('\\').pop()
+        ])
+
+    enterprises_names.pop(0)
+    return enterprises_names
+
+def get_available_databases():
+    engine = create_engine(f'mssql+pymssql://{username}:{password}@{server}', deprecate_large_types=True)
+    conn2 = engine.connect()
+    databases = conn2.execute("select name FROM sys.databases;")
+    available_databases = []
+
+    for db in databases:
+        if 'adCOM' in db['name']:
+            # print(db["name"])
+            available_databases.append(db["name"])
+    
+    return available_databases
+
 def get_clients(request, beginDate, endDate):
     global beginDateG
     global endDateG
+
+    enterprisesX = get_enterprises_names()
+
+    print('\n')
+    print(enterprisesX[0])
+    print(enterprisesX[1])
+    print('\n')
 
     beginDateG = beginDate.split('-')
     endDateG = endDate.split('-')
@@ -40,62 +86,77 @@ def get_clients(request, beginDate, endDate):
     global query_cache
     result = []
 
+    available_databases = get_available_databases()
+    # not_available_databases = []
+
     if len(query_cache) == 0:
         print("\nGETTING DATA\n")
 
-        for database in enterprises:
-            conn = pyodbc.connect('DRIVER={SQL Server};'+
-                                'SERVER=' + server + ';'+
-                                'DATABASE=' + database + ';'+
-                                'UID=' + username + ';'+
-                                'PWD=' + password + ';')
-            cursor = conn.cursor()
-           
-            cursor.execute("SELECT "+
-                        "CSERIEDOCUMENTO, CFOLIO, CFECHA, "+
-                        "CIDCLIENTEPROVEEDOR, CRAZONSOCIAL, CRFC, "+
-                        "CCANCELADO, "+
-                        "CNETO, CIMPUESTO1, CTOTAL, "+
-                        "CMETODOPAG, CGUIDDOCUMENTO, CUSUARIO, CIDDOCUMENTO "+
-                        "FROM admDocumentos " +
-                        f"WHERE CFECHA BETWEEN '{''.join(beginDate)}' AND '{''.join(endDate)}'")
-            # 20200623 | 20200624
-            dataDocumentos = cursor.fetchall()
-            temp = []
-            observTemp = []
-            sentence = ''
-            for query in dataDocumentos:            
-                query = list(query)
-                query.insert(0, database.replace('adCOM_', '').replace('_', ' '))
-                query.insert(0, database)
-                observations = cursor.execute(f"SELECT COBSERVAMOV FROM admMovimientos WHERE CIDDOCUMENTO='{query[len(query)-1]}'")
-                for observ in observations:
-                    if str(observ[0]) != 'None':
-                        observTemp.append(str(observ[0]))
-                for word in observTemp:
-                    sentence+=word+' \n'
-                    sentence+=' \n'
-                query.append(sentence)
-                cursor.fetchall()
-                temp.append(query)
+        for database in enterprisesX:
+            if database[1] in available_databases:
+                try:
+                    conn = pyodbc.connect('DRIVER={SQL Server};'+
+                                        'SERVER=' + server + ';'+
+                                        'DATABASE=' + database[1] + ';'+
+                                        'UID=' + username + ';'+
+                                        'PWD=' + password + ';')
+                    cursor = conn.cursor()
+                
+                    cursor.execute("SELECT "+
+                                "CSERIEDOCUMENTO, CFOLIO, CFECHA, "+
+                                "CIDCLIENTEPROVEEDOR, CRAZONSOCIAL, CRFC, "+
+                                "CCANCELADO, "+
+                                "CNETO, CIMPUESTO1, CTOTAL, "+
+                                "CMETODOPAG, CGUIDDOCUMENTO, CUSUARIO, CIDDOCUMENTO "+
+                                "FROM admDocumentos " +
+                                f"WHERE CFECHA BETWEEN '{''.join(beginDate)}' AND '{''.join(endDate)}'")
+                    
+                    # Expected input: 20200623 | 20200624
 
-            observTemp = [] # reset observations temp.
-            sentence = '' # reset sentence.
-            result.append(temp)
+                    dataDocumentos = cursor.fetchall()
+                    temp = []
+                    
+                    for query in dataDocumentos:            
+                        query = list(query)
+                        query.insert(0, database[1]) # Database name
+                        query.insert(0, database[0]) # Enterprise name
+                        observations = cursor.execute(f"SELECT COBSERVAMOV FROM admMovimientos WHERE CIDDOCUMENTO='{query[len(query)-1]}'")
+
+                        maxLen = 0
+                        observation_final = ''
+
+                        # Get the longest observation
+                        for observ in observations:
+                            if str(observ[0]) != 'None':
+                                if len(str(observ[0])) > maxLen:
+                                    maxLen = len(observ[0])
+                                    observation_final = str(observ[0])
+
+                        query.append(observation_final)
+                        cursor.fetchall()
+                        temp.append(query)
+                    result.append(temp)
+                except NameError:
+                    print("\nAn exception occurred:\n" )
+                    print(NameError)
+            else:
+                print(f"\n'{database[1]}' database is not available")
+                # not_available_databases.append(database[1])
         
         query_cache = result
     else:
         print("\nUSING CACHE\n")
         result = query_cache
     
-    if len(result) == len(enterprises):
-        print("\nALL RIGHT\n")
-    else:
-        print("SOMETHING WENT WRONG")
+    # if len(result) == len(enterprisesX):
+    #     print("\nALL RIGHT\n")
+    # else:
+    #     print("SOMETHING WENT WRONG")
 
     return render(request, 'report/reports.html', {'SqlServerConn' : result})
 
 def clients_report(request):
+    global query_cache
     # OPEN WORKBOOK AND HEADER DETAILS
     wb = Workbook()
     ws = wb.active
@@ -126,8 +187,15 @@ def clients_report(request):
     FullRange = "A2:" + get_column_letter(ws.max_column) + str(ws.max_row)
     ws.auto_filter.ref = FullRange
 
+    last_column = 0
+
+    for enterprise in query_cache:
+        for data in enterprise:
+            if len(data[16]) > last_column:
+                last_column = len(data[16])
+
     # ALIGNMENTS, COLORS AND DIMENSIONS
-    dimensions = [22.14, 23.57, 13.14, 15.14, 34.57, 24.71, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, 25.43, 60]
+    dimensions = [22.14, 23.57, 13.14, 15.14, 34.57, 24.71, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, 25.43, last_column]
    
     ws.row_dimensions[1].height = 26.25
     ws.row_dimensions[2].height = 42.75
@@ -148,7 +216,6 @@ def clients_report(request):
     for i, column_width in enumerate(dimensions):
         ws.column_dimensions[get_column_letter(i+1)].width = column_width + 1
 
-    global query_cache
     counter = 3
 
     # CREATE EXCEL
@@ -161,7 +228,7 @@ def clients_report(request):
                 ws.cell(row=counter, column=1).font = Font(size="12")
                 ws.cell(row=counter, column=1).border = thin_border
                 # Corporación
-                ws.cell(row=counter, column=2).value = data[1]
+                ws.cell(row=counter, column=2).value = data[0]
                 ws.cell(row=counter, column=2).font = Font(size="12")
                 ws.cell(row=counter, column=2).border = thin_border
                 # Fecha
@@ -213,7 +280,7 @@ def clients_report(request):
                 ws.cell(row=counter, column=14).font = Font(size="12")
                 ws.cell(row=counter, column=14).border = thin_border
                 # Observ. Movim.
-                ws.cell(row=counter, column=15).value = data[16]
+                ws.cell(row=counter, column=15).value = data[16] if data[16] else ' - '
                 ws.cell(row=counter, column=15).font = Font(size="12")
                 ws.cell(row=counter, column=15).border = thin_border
 

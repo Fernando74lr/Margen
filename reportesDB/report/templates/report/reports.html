@@ -43,8 +43,8 @@
       {% for enterprise in SqlServerConn %}
         {% if enterprise %}
           <div id="titleAndFilter">
-            <div style="display:block;">
-              <h5 style="margin-bottom:15px;">{{enterprise.0.1}}</h5>
+            <div style="display:flex;width:600px;">
+              <h5 style="margin-bottom:15px;margin-right:5%;">{{enterprise.0.0}}</h5>
               <div>
                 <input type="text" style="width:235px;height:35px;border-radius:5px;" class="inputFilter" id="input{{ forloop.counter }}" onkeyup="myFunction('input{{ forloop.counter }}', 'example{{ forloop.counter }}')" placeholder="¡Busca por cualquier campo!" title="Filtro">
               </div>
@@ -52,44 +52,42 @@
           </div>
           <table id="example{{ forloop.counter }}" style="margin-left:-36px;" class="table table-striped table-bordered table-sm" >
             <thead class="table-dark">
-              <tr>
-                <th class="centerText">#</th>
-                <th class="centerText">Serie y Folio</th>
-                <th class="centerText">Corporación </th>
-                <th class="centerText">Fecha</th>
-                <th class="centerText">RFC</th>
-                <th class="centerText">ID Cliente Proveedor</th>
-                <th class="centerText">Razón Social</th>
-                <th class="centerText">Cancelado</th>
-                <th class="centerText">Neto</th>
-                <th class="centerText">Impuesto1</th>
-                <th class="centerText">Total</th>
-                <th class="centerText">Método de pago</th>
-                <th class="centerText">GUID Doc.</th>
-                <th class="centerText">Usuario</th>
-                <th class="centerText">ID Doc.</th>
+              <tr class="d-flex">
+                <th class="centerText col-1">#</th>
+                <th class="centerText col-1">Serie y Folio</th>
+                <th class="centerText col-1">Fecha</th>
+                <th class="centerText col-2">RFC</th>
+                <th class="centerText col-1">ID Cliente Proveedor</th>
+                <th class="centerText col-2">Razón Social</th>
+                <th class="centerText col-1">Cancelado</th>
+                <th class="centerText col-1">Neto</th>
+                <th class="centerText col-1">Impuesto 1</th>
+                <th class="centerText col-1">Total</th>
+                <th class="centerText col-1">Método de pago</th>
+                <th class="centerText col-3">GUID Doc.</th>
+                <th class="centerText col-2">Usuario</th>
+                <th class="centerText col-1">ID Doc.</th>
+                <th class="centerText col-8">Obv. Mov</th>
               </tr>
             </thead>
             {% for data in enterprise %}
               {% if forloop.counter <= 20 %}
                 <tbody>
-                  <tr>
+                  <tr class="d-flex">
                     <!-- Contador -->
-                    <td scope="row" class="centerText">{{ forloop.counter }}</td>
+                    <td scope="row" class="centerText col-1">{{ forloop.counter }}</td>
                     <!-- Serie y Folio -->
-                    <td class="centerText">{{data.2}}{{data.3|floatformat}}</td>
-                    <!-- Corporación  -->
-                    <td class="centerText">{{data.1}}</td>
+                    <td class="centerText col-1">{{data.2}}{{data.3|floatformat}}</td>
                     <!-- Fecha -->
-                    <td class="centerText">{% formatDate data.4 %}</td>
+                    <td class="centerText col-1">{% formatDate data.4 %}</td>
                     <!-- RFC -->
-                    <td class="centerText">{{data.7}}</td>
+                    <td class="centerText col-2">{{data.7}}</td>
                     <!-- ID Cliente Proveedor -->
-                    <td class="centerText">{{data.5}}</td>
+                    <td class="centerText col-1">{{data.5}}</td>
                     <!-- Razón Social -->
-                    <td class="centerText">{{data.6}}</td>
+                    <td class="centerText col-2">{{data.6}}</td>
                     <!-- Cancelado -->
-                    <td class="centerText">
+                    <td class="centerText col-1">
                       {% if data.8 == 1 %}
                         CANCELADO
                       {% else %}
@@ -97,19 +95,27 @@
                       {% endif %}
                     </td>
                     <!-- Neto -->
-                    <td class="centerText">{{data.9}}</td>
+                    <td class="centerText col-1">{{data.9}}</td>
                     <!-- Impuesto1 -->
-                    <td class="centerText">{{data.10}}</td>
+                    <td class="centerText col-1">{{data.10}}</td>
                     <!-- Total -->
-                    <td class="centerText">{{data.11}}</td>
+                    <td class="centerText col-1">{{data.11}}</td>
                     <!-- Método de pago -->
-                    <td class="centerText">{{data.12}}</td>
+                    <td class="centerText col-1">{{data.12}}</td>
                     <!-- GUID Documento -->
-                    <td class="centerText">{{data.13}}</td>
+                    <td class="centerText col-3">{{data.13}}</td>
                     <!-- Usuario -->
-                    <td class="centerText">{{data.14}}</td>
+                    <td class="centerText col-2">{{data.14}}</td>
                     <!-- ID Documento -->
-                    <td class="centerText">{{data.15}}</td>
+                    <td class="centerText col-1">{{data.15}}</td>
+                    <!-- Obv. Mov. -->
+                    <td class="centerText col-8">
+                      {% if data.16|length > 0 %}
+                        {{data.16}}
+                      {% else %}
+                        -
+                      {% endif %}  
+                    </td>
                   </tr>
                 </tbody>
               {% endif %}
