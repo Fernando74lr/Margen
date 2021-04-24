@@ -23,11 +23,13 @@ p {
 
 #titleAndFilter {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: center;
   align-items: center;
-  /* margin-left: -6.5%; */
-  width: 107%;
+  margin-left: 10%;
+  width: 80%;
   height: 70px;
+  margin-bottom: 10px;
   /* border: 1px solid red; */
 }
 

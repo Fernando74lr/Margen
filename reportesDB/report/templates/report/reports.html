@@ -43,12 +43,14 @@
       {% for enterprise in SqlServerConn %}
         {% if enterprise %}
           <div id="titleAndFilter">
-            <h5 style="margin-bottom:15px;">{{enterprise.0.1}}</h5>
-            <div>
-              <input type="text" style="width:235px;height:35px;border-radius:5px;" class="inputFilter" id="input{{ forloop.counter }}" onkeyup="myFunction('input{{ forloop.counter }}', 'example{{ forloop.counter }}')" placeholder="¡Busca por cualquier campo!" title="Filtro">
+            <div style="display:block;">
+              <h5 style="margin-bottom:15px;">{{enterprise.0.1}}</h5>
+              <div>
+                <input type="text" style="width:235px;height:35px;border-radius:5px;" class="inputFilter" id="input{{ forloop.counter }}" onkeyup="myFunction('input{{ forloop.counter }}', 'example{{ forloop.counter }}')" placeholder="¡Busca por cualquier campo!" title="Filtro">
+              </div>
             </div>
           </div>
-          <table id="example{{ forloop.counter }}" class="table table-striped table-bordered table-sm" >
+          <table id="example{{ forloop.counter }}" style="margin-left:-36px;" class="table table-striped table-bordered table-sm" >
             <thead class="table-dark">
               <tr>
                 <th class="centerText">#</th>

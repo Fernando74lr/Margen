@@ -1,7 +1,7 @@
 from .data.secret.credentials import server, username, password
 from django.http.response import HttpResponse
 from openpyxl.utils import get_column_letter
-from .functions.tools import format_date, thin_border, enterprises, get_time
+from .functions.tools import format_date, thin_border, enterprises, get_time, format_date_prefered
 from openpyxl.styles import Alignment, Font, PatternFill
 from django.shortcuts import render
 from .models import SqlServerConn
@@ -22,8 +22,8 @@ def get_clients(request, beginDate, endDate):
     global beginDateG
     global endDateG
 
-    beginDateG = beginDate.replace('-', '/')
-    endDateG = endDate.replace('-', '/')
+    beginDateG = beginDate.split('-')
+    endDateG = endDate.split('-')
 
     beginDate = list(beginDate.split("/"))
     endDate = list(endDate.split("/"))
@@ -95,7 +95,7 @@ def clients_report(request):
     ws = wb.active
     ws.title = "Reporte"
     ws['A1'] = f'REPORTE DE CLIENTES - {format_date()} - {get_time()}'
-    ws['E1'] = f'Rango: {beginDateG} - {endDateG}'
+    ws['E1'] = f'Rango: {beginDateG[2]}/{beginDateG[1]}/{beginDateG[0]} - {endDateG[2]}/{endDateG[1]}/{endDateG[0]}'
     ws.merge_cells('A1:D1')
     ws.merge_cells('E1:F1')
 
@@ -122,7 +122,7 @@ def clients_report(request):
     ws.auto_filter.ref = FullRange
 
     # ALIGNMENTS, COLORS AND DIMENSIONS
-    dimensions = [29.43, 23.57, 12.57, 19.43, 15.14, 34.57, 68.14, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, 25.43, 60]
+    dimensions = [29.43, 23.57, 12.57, 13.14, 15.14, 34.57, 68.14, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, 25.43, 60]
     
     ws.row_dimensions[1].height = 26.25
     ws.row_dimensions[2].height = 42.75
@@ -164,7 +164,7 @@ def clients_report(request):
                 ws.cell(row=counter, column=3).font = Font(size="12")
                 ws.cell(row=counter, column=3).border = thin_border
                 # Fecha
-                ws.cell(row=counter, column=4).value = data[4]
+                ws.cell(row=counter, column=4).value = format_date_prefered(data[4])
                 ws.cell(row=counter, column=4).font = Font(size="12")
                 ws.cell(row=counter, column=4).border = thin_border
                 # RFC

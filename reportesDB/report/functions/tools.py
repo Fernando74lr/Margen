@@ -62,6 +62,10 @@ def get_time():
     current_time = now.strftime("%H:%M:%S")
     return current_time
 
+def format_date_prefered(date):
+    f_date = str(date).split(' ')[0].split('-')
+    return f'{f_date[2]}/{f_date[1]}/{f_date[0]}'
+
 def format_date():
     months = {
         '01' : 'Enero',
