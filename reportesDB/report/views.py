@@ -181,7 +181,7 @@ def clients_report(request):
                 ws.cell(row=counter, column=6).font = Font(size="12")
                 ws.cell(row=counter, column=6).border = thin_border
                 # Cancelado
-                ws.cell(row=counter, column=7).value = data[8]
+                ws.cell(row=counter, column=7).value = 'CANCELADO' if data[8] else ' - '
                 ws.cell(row=counter, column=7).font = Font(size="12")
                 ws.cell(row=counter, column=7).border = thin_border
                 # Neto
