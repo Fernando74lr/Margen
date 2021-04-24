@@ -15,7 +15,13 @@ endDateG = ''
 def table(request):
     return render(request, 'report/table_filter.html')
 
+def clean_cache():
+    global query_cache
+    query_cache = [] # Clean cache
+    print('\nCLEANING CACHE\n')
+
 def reports(request):
+    clean_cache()
     return render(request, 'report/reports.html')
 
 def get_clients(request, beginDate, endDate):
@@ -95,45 +101,44 @@ def clients_report(request):
     ws = wb.active
     ws.title = "Reporte"
     ws['A1'] = f'REPORTE DE CLIENTES - {format_date()} - {get_time()}'
-    ws['E1'] = f'Rango: {beginDateG[2]}/{beginDateG[1]}/{beginDateG[0]} - {endDateG[2]}/{endDateG[1]}/{endDateG[0]}'
+    ws['E1'] = f'RANGO: {beginDateG[2]}/{beginDateG[1]}/{beginDateG[0]} - {endDateG[2]}/{endDateG[1]}/{endDateG[0]}'
     ws.merge_cells('A1:D1')
     ws.merge_cells('E1:F1')
 
     # HEADERS
-    ws['A2'] = 'SERIE DOCUMENTO'
+    ws['A2'] = 'SERIE Y FOLIO'
     ws['B2'] = 'CORPORACIÓN'
-    ws['C2'] = 'FOLIO'
-    ws['D2'] = 'FECHA'
-    ws['E2'] = 'RFC'
-    ws['F2'] = 'ID CLIENTE PROVEEDOR'
-    ws['G2'] = 'RAZÓN SOCIAL'
-    ws['H2'] = 'CANCELADO'
-    ws['I2'] = 'NETO'
-    ws['J2'] = 'IMPUESTO1'
-    ws['K2'] = 'TOTAL'
-    ws['L2'] = 'MÉTODO DE PAGO'
-    ws['M2'] = 'GUID DOCUMENTO'
-    ws['N2'] = 'USUARIO'
-    ws['O2'] = 'ID DOCUMENTO'
-    ws['P2'] = 'OBSERV. MOVIM.'
+    ws['C2'] = 'FECHA'
+    ws['D2'] = 'RFC'
+    ws['E2'] = 'ID CLIENTE PROVEEDOR'
+    ws['F2'] = 'RAZÓN SOCIAL'
+    ws['G2'] = 'CANCELADO'
+    ws['H2'] = 'NETO'
+    ws['I2'] = 'IMPUESTO 1'
+    ws['J2'] = 'TOTAL'
+    ws['K2'] = 'MÉTODO DE PAGO'
+    ws['L2'] = 'GUID DOCUMENTO'
+    ws['M2'] = 'USUARIO'
+    ws['N2'] = 'ID DOCUMENTO'
+    ws['O2'] = 'OBSERV. MOVIM.'
 
     # FILTERS
     FullRange = "A2:" + get_column_letter(ws.max_column) + str(ws.max_row)
     ws.auto_filter.ref = FullRange
 
     # ALIGNMENTS, COLORS AND DIMENSIONS
-    dimensions = [29.43, 23.57, 12.57, 13.14, 15.14, 34.57, 68.14, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, 25.43, 60]
-    
+    dimensions = [22.14, 23.57, 13.14, 15.14, 34.57, 24.71, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, 25.43, 60]
+   
     ws.row_dimensions[1].height = 26.25
     ws.row_dimensions[2].height = 42.75
 
     ws['A1'].alignment = Alignment(horizontal="center", vertical="center")
-    ws['A1'].font = Font(size="18", color="FF0000")
+    ws['A1'].font = Font(size="16", color="FF0000", b=True)
 
     ws['E1'].alignment = Alignment(horizontal="center", vertical="center")
-    ws['E1'].font = Font(size="18", color="FF0000")
+    ws['E1'].font = Font(size="16", color="FF0000", b=True)
 
-    for col in range(16):
+    for col in range(15):
         ws.cell(row=2, column=col+1).alignment = Alignment(horizontal="center", vertical="center")
         ws.cell(row=2, column=col+1).fill = PatternFill(start_color="2F75B5", end_color="2F75B5", fill_type = "solid")
         ws.cell(row=2, column=col+1).font = Font(size="16", color="FFFFFF")
@@ -152,69 +157,65 @@ def clients_report(request):
         for enterprise in query_cache:
             for data in enterprise:
                 # Serie Documento
-                ws.cell(row=counter, column=1).value = data[2]
+                ws.cell(row=counter, column=1).value = f'{data[2]}{int(data[3])}'
                 ws.cell(row=counter, column=1).font = Font(size="12")
                 ws.cell(row=counter, column=1).border = thin_border
                 # Corporación
                 ws.cell(row=counter, column=2).value = data[1]
                 ws.cell(row=counter, column=2).font = Font(size="12")
                 ws.cell(row=counter, column=2).border = thin_border
-                # Folio
-                ws.cell(row=counter, column=3).value = data[3]
+                # Fecha
+                ws.cell(row=counter, column=3).value = format_date_prefered(data[4])
                 ws.cell(row=counter, column=3).font = Font(size="12")
                 ws.cell(row=counter, column=3).border = thin_border
-                # Fecha
-                ws.cell(row=counter, column=4).value = format_date_prefered(data[4])
+                # RFC
+                ws.cell(row=counter, column=4).value = data[7]
                 ws.cell(row=counter, column=4).font = Font(size="12")
                 ws.cell(row=counter, column=4).border = thin_border
-                # RFC
-                ws.cell(row=counter, column=5).value = data[7]
+                # ID Cliente Proveedor
+                ws.cell(row=counter, column=5).value = str(data[5]).split(' ')[0]
                 ws.cell(row=counter, column=5).font = Font(size="12")
                 ws.cell(row=counter, column=5).border = thin_border
-                # ID Cliente Proveedor
-                ws.cell(row=counter, column=6).value = str(data[5]).split(' ')[0]
+                # Razón Social
+                ws.cell(row=counter, column=6).value = data[6]
                 ws.cell(row=counter, column=6).font = Font(size="12")
                 ws.cell(row=counter, column=6).border = thin_border
-                # Razón Social
-                ws.cell(row=counter, column=7).value = data[6]
+                # Cancelado
+                ws.cell(row=counter, column=7).value = data[8]
                 ws.cell(row=counter, column=7).font = Font(size="12")
                 ws.cell(row=counter, column=7).border = thin_border
-                # Cancelado
-                ws.cell(row=counter, column=8).value = data[8]
+                # Neto
+                ws.cell(row=counter, column=8).value = data[9]
                 ws.cell(row=counter, column=8).font = Font(size="12")
                 ws.cell(row=counter, column=8).border = thin_border
-                # Neto
-                ws.cell(row=counter, column=9).value = data[9]
+                # Impuesto1
+                ws.cell(row=counter, column=9).value = data[10]
                 ws.cell(row=counter, column=9).font = Font(size="12")
                 ws.cell(row=counter, column=9).border = thin_border
-                # Impuesto1
-                ws.cell(row=counter, column=10).value = data[10]
+                # Total
+                ws.cell(row=counter, column=10).value = data[11]
                 ws.cell(row=counter, column=10).font = Font(size="12")
                 ws.cell(row=counter, column=10).border = thin_border
-                # Total
-                ws.cell(row=counter, column=11).value = data[11]
+                # Método de pago
+                ws.cell(row=counter, column=11).value = str(data[12]).split(' ')[0]
                 ws.cell(row=counter, column=11).font = Font(size="12")
                 ws.cell(row=counter, column=11).border = thin_border
-                # Método de pago
-                ws.cell(row=counter, column=12).value = str(data[12]).split(' ')[0]
+                # GUID Documento
+                ws.cell(row=counter, column=12).value = data[13]
                 ws.cell(row=counter, column=12).font = Font(size="12")
                 ws.cell(row=counter, column=12).border = thin_border
-                # GUID Documento
-                ws.cell(row=counter, column=13).value = data[13]
+                # Usuario
+                ws.cell(row=counter, column=13).value = data[14]
                 ws.cell(row=counter, column=13).font = Font(size="12")
                 ws.cell(row=counter, column=13).border = thin_border
-                # Usuario
-                ws.cell(row=counter, column=14).value = data[14]
+                # ID Documento
+                ws.cell(row=counter, column=14).value = str(data[15]).split(' ')[0]
                 ws.cell(row=counter, column=14).font = Font(size="12")
                 ws.cell(row=counter, column=14).border = thin_border
-                # ID Documento
-                ws.cell(row=counter, column=15).value = str(data[15]).split(' ')[0]
+                # Observ. Movim.
+                ws.cell(row=counter, column=15).value = data[16]
                 ws.cell(row=counter, column=15).font = Font(size="12")
                 ws.cell(row=counter, column=15).border = thin_border
-                # Observ. Movim.
-                ws.cell(row=counter, column=16).value = data[16]
-                ws.cell(row=counter, column=16).font = Font(size="12")
-                ws.cell(row=counter, column=16).border = thin_border
 
                 counter+=1
     else:
@@ -226,5 +227,6 @@ def clients_report(request):
     content = 'attachment; filename = {0}'.format(filename)
     response['Content-Disposition'] = content
     wb.save(response)
+    clean_cache()
 
     return response

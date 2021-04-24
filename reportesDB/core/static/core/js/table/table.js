@@ -1,13 +1,3 @@
-// $(document).ready(function() {
-//     $('#examplexd').DataTable();
-//     $('#example2').addClass('table table-striped table-bordered');
-//     $('#example2').DataTable();
-// } );    
-
-// function setTable(tagId) {
-//     document.getElementById(tagId).DataTable();
-// }
-
 function myFunction(inputID, tableID) {
     var input, filter, table, tr, td, cell, i, j;
     input = document.getElementById(inputID);
@@ -17,7 +7,6 @@ function myFunction(inputID, tableID) {
     for (i = 1; i < tr.length; i++) {
       // Hide the row initially.
       tr[i].style.display = "none";
-    
       td = tr[i].getElementsByTagName("td");
       for (var j = 0; j < td.length; j++) {
         cell = tr[i].getElementsByTagName("td")[j];
@@ -37,7 +26,7 @@ $(document).ready(function() {
     var end = moment();
 
     function cb(start, end) {
-        let rangeDate = start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY');
+        let rangeDate = start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY');
         $('#reportrange span').html(rangeDate);
 
         console.log(rangeDate);
@@ -50,7 +39,7 @@ $(document).ready(function() {
 
     function formatDate(date) {
         let beginDate = date.split('/');
-        return `${beginDate[2]}-${beginDate[0]}-${beginDate[1]}`;
+        return `${beginDate[2]}-${beginDate[1]}-${beginDate[0]}`;
     }
 
     $('#reportrange').daterangepicker({
@@ -65,7 +54,7 @@ $(document).ready(function() {
            'Último Mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
         locale: {
-            'format': 'MM/DD/YYYY',
+            'format': 'DD/MM/YYYY',
             'separator': ' - ',
             'applyLabel': 'Aplicar',
             'cancelLabel': 'Cancelar',

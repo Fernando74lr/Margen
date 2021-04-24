@@ -54,9 +54,8 @@
             <thead class="table-dark">
               <tr>
                 <th class="centerText">#</th>
-                <th class="centerText">Serie Doc.</th>
+                <th class="centerText">Serie y Folio</th>
                 <th class="centerText">Corporación </th>
-                <th class="centerText">Folio</th>
                 <th class="centerText">Fecha</th>
                 <th class="centerText">RFC</th>
                 <th class="centerText">ID Cliente Proveedor</th>
@@ -75,13 +74,12 @@
               {% if forloop.counter <= 20 %}
                 <tbody>
                   <tr>
+                    <!-- Contador -->
                     <td scope="row" class="centerText">{{ forloop.counter }}</td>
-                    <!-- Serie Documento -->
-                    <td class="centerText">{{data.2}}</td>
+                    <!-- Serie y Folio -->
+                    <td class="centerText">{{data.2}}{{data.3|floatformat}}</td>
                     <!-- Corporación  -->
                     <td class="centerText">{{data.1}}</td>
-                    <!-- Folio -->
-                    <td class="centerText">{{data.3}}</td>
                     <!-- Fecha -->
                     <td class="centerText">{% formatDate data.4 %}</td>
                     <!-- RFC -->
