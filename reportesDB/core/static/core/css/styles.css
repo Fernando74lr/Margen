@@ -25,8 +25,8 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: -6.5%;
-  width: 110%;
+  /* margin-left: -6.5%; */
+  width: 107%;
   height: 70px;
   /* border: 1px solid red; */
 }
