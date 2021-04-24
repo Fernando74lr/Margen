@@ -43,3 +43,7 @@ p {
 .inputFilter::placeholder {
   font-size: 16px;
 }
+
+.hiddenTag {
+  display: none;
+}

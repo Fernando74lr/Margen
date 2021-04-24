@@ -171,28 +171,28 @@ def clients_report(request):
     ws['B2'] = 'CORPORACIÓN'
     ws['C2'] = 'FECHA'
     ws['D2'] = 'RFC'
-    ws['E2'] = 'ID CLIENTE PROVEEDOR'
+    ws['E2'] = 'ID CLIENTE PROVEEDOR' # COMENTAR
     ws['F2'] = 'RAZÓN SOCIAL'
     ws['G2'] = 'CANCELADO'
     ws['H2'] = 'NETO'
     ws['I2'] = 'IMPUESTO 1'
     ws['J2'] = 'TOTAL'
     ws['K2'] = 'MÉTODO DE PAGO'
-    ws['L2'] = 'GUID DOCUMENTO'
+    ws['L2'] = 'UUID DOCUMENTO'
     ws['M2'] = 'USUARIO'
-    ws['N2'] = 'ID DOCUMENTO'
+    ws['N2'] = 'ID DOCUMENTO' # COMENTAR
     ws['O2'] = 'OBSERV. MOVIM.'
 
     # FILTERS
     FullRange = "A2:" + get_column_letter(ws.max_column) + str(ws.max_row)
     ws.auto_filter.ref = FullRange
 
-    last_column = 0
+    last_column = 120
 
-    for enterprise in query_cache:
-        for data in enterprise:
-            if len(data[16]) > last_column:
-                last_column = len(data[16])
+    # for enterprise in query_cache:
+    #     for data in enterprise:
+    #         if len(data[16]) > last_column:
+    #             last_column = len(data[16])
 
     # ALIGNMENTS, COLORS AND DIMENSIONS
     dimensions = [22.14, 23.57, 13.14, 15.14, 34.57, 24.71, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, 25.43, last_column]
