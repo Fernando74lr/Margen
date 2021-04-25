@@ -1,24 +1,57 @@
 function myFunction(inputID, tableID) {
-    var input, filter, table, tr, td, cell, i, j;
-    input = document.getElementById(inputID);
-    filter = input.value.toUpperCase();
-    table = document.getElementById(tableID);
-    tr = table.getElementsByTagName("tr");
-    for (i = 1; i < tr.length; i++) {
-      // Hide the row initially.
-      tr[i].style.display = "none";
-      td = tr[i].getElementsByTagName("td");
-      for (var j = 0; j < td.length; j++) {
-        cell = tr[i].getElementsByTagName("td")[j];
-        if (cell) {
-          if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-            break;
-          } 
-        }
+  var input, filter, table, tr, td, cell, i, j;
+  input = document.getElementById(inputID);
+  filter = input.value.toUpperCase();
+  table = document.getElementById(tableID);
+  tr = table.getElementsByTagName("tr");
+  for (i = 1; i < tr.length; i++) {
+    // Hide the row initially.
+    tr[i].style.display = "none";
+    td = tr[i].getElementsByTagName("td");
+    for (var j = 0; j < td.length; j++) {
+      cell = tr[i].getElementsByTagName("td")[j];
+      if (cell) {
+        if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+          break;
+        } 
       }
     }
   }
+}
+
+function hide() {
+  console.log('XD');
+  $('#getDataButton').addClass('invisible');
+}
+
+function clean_query() {
+  $('#getDataButton').removeClass('hiddenTag');
+  window.location.replace("http://127.0.0.1:8000/reports/");
+}
+
+
+let see = false;
+
+function seeTables() {
+  let eye_icon = $('#icon-eye');
+  let see_or_hidde = $('#see-or-hidde');
+  let button_table = $('#content-tables');
+  if (see) {
+    button_table.addClass('hiddenTag');
+    see = false;
+    eye_icon.removeClass('fas fa-eye-slash');
+    eye_icon.addClass('fas fa-eye');
+    see_or_hidde.html('Visualizar datos');
+  } else {
+    button_table.removeClass('hiddenTag');
+    see = true;
+    eye_icon.removeClass('fas fa-eye');
+    eye_icon.addClass('fas fa-eye-slash');
+    see_or_hidde.html('Ocultar datos');
+  }
+}
+
 
 $(document).ready(function() {
     // Date Range Picker

@@ -171,17 +171,17 @@ def clients_report(request):
     ws['B2'] = 'CORPORACIÓN'
     ws['C2'] = 'FECHA'
     ws['D2'] = 'RFC'
-    ws['E2'] = 'ID CLIENTE PROVEEDOR' # COMENTAR
-    ws['F2'] = 'RAZÓN SOCIAL'
-    ws['G2'] = 'CANCELADO'
-    ws['H2'] = 'NETO'
-    ws['I2'] = 'IMPUESTO 1'
-    ws['J2'] = 'TOTAL'
-    ws['K2'] = 'MÉTODO DE PAGO'
-    ws['L2'] = 'UUID DOCUMENTO'
-    ws['M2'] = 'USUARIO'
-    ws['N2'] = 'ID DOCUMENTO' # COMENTAR
-    ws['O2'] = 'OBSERV. MOVIM.'
+    # ws['E2'] = 'ID CLIENTE PROVEEDOR' # COMENTAR
+    ws['E2'] = 'RAZÓN SOCIAL'
+    ws['F2'] = 'CANCELADO'
+    ws['G2'] = 'NETO'
+    ws['H2'] = 'IMPUESTO 1'
+    ws['I2'] = 'TOTAL'
+    ws['J2'] = 'MÉTODO DE PAGO'
+    ws['K2'] = 'UUID DOCUMENTO'
+    ws['L2'] = 'USUARIO'
+    # ws['N2'] = 'ID DOCUMENTO' # COMENTAR
+    ws['M2'] = 'OBSERV. MOVIM.'
 
     # FILTERS
     FullRange = "A2:" + get_column_letter(ws.max_column) + str(ws.max_row)
@@ -195,7 +195,7 @@ def clients_report(request):
     #             last_column = len(data[16])
 
     # ALIGNMENTS, COLORS AND DIMENSIONS
-    dimensions = [22.14, 23.57, 13.14, 15.14, 34.57, 24.71, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, 25.43, last_column]
+    dimensions = [22.14, 23.57, 13.14, 15.14, 24.71, 20.43, 12, 19.71, 13, 28.57, 40.43, 16.29, last_column]
    
     ws.row_dimensions[1].height = 26.25
     ws.row_dimensions[2].height = 42.75
@@ -206,7 +206,7 @@ def clients_report(request):
     ws['E1'].alignment = Alignment(horizontal="center", vertical="center")
     ws['E1'].font = Font(size="16", color="FF0000", b=True)
 
-    for col in range(15):
+    for col in range(13):
         ws.cell(row=2, column=col+1).alignment = Alignment(horizontal="center", vertical="center")
         ws.cell(row=2, column=col+1).fill = PatternFill(start_color="2F75B5", end_color="2F75B5", fill_type = "solid")
         ws.cell(row=2, column=col+1).font = Font(size="16", color="FFFFFF")
@@ -240,49 +240,49 @@ def clients_report(request):
                 ws.cell(row=counter, column=4).font = Font(size="12")
                 ws.cell(row=counter, column=4).border = thin_border
                 # ID Cliente Proveedor
-                ws.cell(row=counter, column=5).value = str(data[5]).split(' ')[0]
+                # ws.cell(row=counter, column=5).value = str(data[5]).split(' ')[0]
+                # ws.cell(row=counter, column=5).font = Font(size="12")
+                # ws.cell(row=counter, column=5).border = thin_border
+                # Razón Social
+                ws.cell(row=counter, column=5).value = data[6]
                 ws.cell(row=counter, column=5).font = Font(size="12")
                 ws.cell(row=counter, column=5).border = thin_border
-                # Razón Social
-                ws.cell(row=counter, column=6).value = data[6]
+                # Cancelado
+                ws.cell(row=counter, column=6).value = 'CANCELADO' if data[8] else ' - '
                 ws.cell(row=counter, column=6).font = Font(size="12")
                 ws.cell(row=counter, column=6).border = thin_border
-                # Cancelado
-                ws.cell(row=counter, column=7).value = 'CANCELADO' if data[8] else ' - '
+                # Neto
+                ws.cell(row=counter, column=7).value = data[9]
                 ws.cell(row=counter, column=7).font = Font(size="12")
                 ws.cell(row=counter, column=7).border = thin_border
-                # Neto
-                ws.cell(row=counter, column=8).value = data[9]
+                # Impuesto1
+                ws.cell(row=counter, column=8).value = data[10]
                 ws.cell(row=counter, column=8).font = Font(size="12")
                 ws.cell(row=counter, column=8).border = thin_border
-                # Impuesto1
-                ws.cell(row=counter, column=9).value = data[10]
+                # Total
+                ws.cell(row=counter, column=9).value = data[11]
                 ws.cell(row=counter, column=9).font = Font(size="12")
                 ws.cell(row=counter, column=9).border = thin_border
-                # Total
-                ws.cell(row=counter, column=10).value = data[11]
+                # Método de pago
+                ws.cell(row=counter, column=10).value = str(data[12]).split(' ')[0]
                 ws.cell(row=counter, column=10).font = Font(size="12")
                 ws.cell(row=counter, column=10).border = thin_border
-                # Método de pago
-                ws.cell(row=counter, column=11).value = str(data[12]).split(' ')[0]
+                # GUID Documento
+                ws.cell(row=counter, column=11).value = data[13]
                 ws.cell(row=counter, column=11).font = Font(size="12")
                 ws.cell(row=counter, column=11).border = thin_border
-                # GUID Documento
-                ws.cell(row=counter, column=12).value = data[13]
+                # Usuario
+                ws.cell(row=counter, column=12).value = data[14]
                 ws.cell(row=counter, column=12).font = Font(size="12")
                 ws.cell(row=counter, column=12).border = thin_border
-                # Usuario
-                ws.cell(row=counter, column=13).value = data[14]
+                # ID Documento
+                # ws.cell(row=counter, column=14).value = str(data[15]).split(' ')[0]
+                # ws.cell(row=counter, column=14).font = Font(size="12")
+                # ws.cell(row=counter, column=14).border = thin_border
+                # Observ. Movim.
+                ws.cell(row=counter, column=13).value = data[16] if data[16] else ' - '
                 ws.cell(row=counter, column=13).font = Font(size="12")
                 ws.cell(row=counter, column=13).border = thin_border
-                # ID Documento
-                ws.cell(row=counter, column=14).value = str(data[15]).split(' ')[0]
-                ws.cell(row=counter, column=14).font = Font(size="12")
-                ws.cell(row=counter, column=14).border = thin_border
-                # Observ. Movim.
-                ws.cell(row=counter, column=15).value = data[16] if data[16] else ' - '
-                ws.cell(row=counter, column=15).font = Font(size="12")
-                ws.cell(row=counter, column=15).border = thin_border
 
                 counter+=1
     else:
