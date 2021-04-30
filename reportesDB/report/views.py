@@ -9,6 +9,7 @@ from openpyxl import Workbook
 import pyodbc
 from sqlalchemy import create_engine
 import pymssql
+from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
 
 query_cache = []
 beginDateG = ''
@@ -131,8 +132,12 @@ def get_clients(request, beginDate, endDate):
                                 if len(str(observ[0])) > maxLen:
                                     maxLen = len(observ[0])
                                     observation_final = str(observ[0])
+                        
+                        # if not observation_final.isascii():
+                        #     observation_final = '-'
+                        #     print("\nNO FUE ASCII\n")
 
-                        query.append(observation_final)
+                        query.append(str(observation_final))
                         cursor.fetchall()
                         temp.append(query)
                     result.append(temp)
@@ -154,6 +159,25 @@ def get_clients(request, beginDate, endDate):
     #     print("SOMETHING WENT WRONG")
 
     return render(request, 'report/reports.html', {'SqlServerConn' : result})
+
+def check_val(value):
+    print()
+    print(value)
+    print()
+    # Check if is a valid value
+    if value:
+        # Check is string is ascii
+        if value.isascii():
+            max_len = 32767
+            # Check string size
+            if len(value) > max_len:
+                value = value[:max_len]
+                print('VALUE PASADO DE LONGITUD')
+    else:
+        print('VALUE NO ERA VALIDO')
+        value = '-'
+    
+    return value
 
 def clients_report(request):
     global query_cache
@@ -280,7 +304,8 @@ def clients_report(request):
                 # ws.cell(row=counter, column=14).font = Font(size="12")
                 # ws.cell(row=counter, column=14).border = thin_border
                 # Observ. Movim.
-                ws.cell(row=counter, column=13).value = data[16] if data[16] else ' - '
+                content = ILLEGAL_CHARACTERS_RE.sub(r'', data[16])
+                ws.cell(row=counter, column=13).value = content
                 ws.cell(row=counter, column=13).font = Font(size="12")
                 ws.cell(row=counter, column=13).border = thin_border
 
