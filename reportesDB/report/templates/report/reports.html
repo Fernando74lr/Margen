@@ -54,9 +54,9 @@
         Limpiar consulta 
         <i class="fas fa-trash-alt"></i>
       </button><br><br>
-      {% for enterprise in SqlServerConn %}
-        {% if enterprise %}
-          <div id="content-tables" class="hiddenTag">
+      <div id="content-tables" class="hiddenTag">
+        {% for enterprise in SqlServerConn %}
+          {% if enterprise %}
             <div id="titleAndFilter">
               <div style="display:flex;width:600px;">
                 <h5 style="margin-bottom:15px;margin-right:5%;">{{enterprise.0.0}}</h5>
@@ -137,9 +137,9 @@
               {% endfor %}
             </table>
             <br>
-          </div>
-        {% endif %}
-      {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
     {% endif %}
   </div>
 {% endblock %}
